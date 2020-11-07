@@ -86,6 +86,14 @@ def print_database():
     df = pd.read_sql_query("SELECT * FROM transactions", connection)
     print(df.to_string(index=False))
 
+def read_me():
+    try:
+        f = open("README.md", "r")
+        print(f.read())
+        f.close()
+    except FileNotFoundError:
+        sys.exit(0)
+
 def main():
     try:
         sys.argv[1]
@@ -101,6 +109,8 @@ def main():
         delete_transaction(sys.argv[2])
     if sys.argv[1] == "-c":
         calculations()
+    if sys.argv[1] == "-help":
+        read_me()
 
 main()
 connection.close()
