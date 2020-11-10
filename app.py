@@ -46,8 +46,9 @@ CREATE TABLE IF NOT EXISTS transactions (
 execute_query(connection, create_transactions_table, None)
 
 
-def create_transaction(description, amount):
-    today = date.today()
+def create_transaction(today, description, amount):
+    if today == None:
+        today = date.today()
     #s = "2020-11-11"
     sqlite_insert_with_param = """INSERT INTO transactions
                       (date, description, amount)
@@ -99,17 +100,20 @@ def main():
         sys.argv[1]
     except IndexError:
         raise SystemExit(f"Usage: {sys.argv[0]} <-a, -e, -d, -p, -c, -help>")
-    if sys.argv[1] == "-a":
-        create_transaction(sys.argv[2], float(sys.argv[3]))
-    if sys.argv[1] == "-p":
+    argv_len = len(sys.argv)
+    if sys.argv[1] == "-a" and argv_len == 4:
+        create_transaction(None, sys.argv[2], float(sys.argv[3]))
+    if sys.argv[1] == "-a" and argv_len == 5:
+        create_transaction(sys.argv[2], sys.argv[3], float(sys.argv[4]))
+    elif sys.argv[1] == "-p":
         print_database()
-    if sys.argv[1] == "-e":
+    elif sys.argv[1] == "-e":
         update_transaction(sys.argv[2], sys.argv[3], float(sys.argv[4]))
-    if sys.argv[1] == "-d":
+    elif sys.argv[1] == "-d":
         delete_transaction(sys.argv[2])
-    if sys.argv[1] == "-c":
+    elif sys.argv[1] == "-c":
         calculations()
-    if sys.argv[1] == "-help":
+    elif sys.argv[1] == "-help":
         read_me()
 
 main()
